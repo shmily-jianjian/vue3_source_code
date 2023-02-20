@@ -13,17 +13,18 @@
     const { effect, reactivity } = VueReactivity
     const person = {
       name: 'xiaojin',
-      getName() {
-        return this.name + 'love jianjian'
-      }
+      age: 22,
+      address: 'fafwafwawfa',
     }
-
     const state = reactivity(person)
-    console.log(state);
-    
     effect(() => {
-      app.innerHTML = `大家好,我是${state.name}`
+      state.age = Math.random()
+      app.innerHTML = `大家好,我是${state.name},${state.age}, ${state.address}`
     })
+
+    setTimeout(() => {
+      // state.age++
+    }, 1000)
   </script>
 </body>
 </html>

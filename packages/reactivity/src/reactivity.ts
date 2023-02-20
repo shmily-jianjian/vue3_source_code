@@ -1,8 +1,6 @@
 import { isObj } from "@vue/shared";
+import { ReactivityFlags, baseHandler } from "./baseHandler";
 
-const enum ReactivityFlags {
-  IS_REACIVITY = '__v_isReacivity'
-}
 
 // 存储代理过的对象
 const reactivityMap = new WeakMap()
@@ -23,22 +21,7 @@ export function reactivity(target) {
     return isExist
   }
 
-  const proxyTarget = new Proxy(target, {
-    get(target, key, receiver) {
-      console.log('执行get方法了');
-      console.log('key', key);
-      // 再次传入target为代理对象时候返回true, 当到达16行时候就会if(true) return target了
-      if(key === ReactivityFlags.IS_REACIVITY) {
-        return true
-      }
-      return Reflect.get(target, key, receiver)
-    },
-    set(target, key, value, receiver) { 
-      console.log('执行set方法了');
-      console.log('key', key);
-      return Reflect.set(target, key, value, receiver)
-    }
-  })
+  const proxyTarget = new Proxy(target, baseHandler)
   reactivityMap.set(target, proxyTarget)
   return proxyTarget
 }
